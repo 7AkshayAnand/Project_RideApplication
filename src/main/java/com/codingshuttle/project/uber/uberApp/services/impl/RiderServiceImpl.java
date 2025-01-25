@@ -64,14 +64,14 @@ public class RiderServiceImpl implements RiderService {
 
         List<Driver> drivers =  rideStrategyManager. driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
 
-        //        TODO : Send notification to all the drivers about this ride request
 
 
-//      System.out.println("details: "+savedRideRequest.getRider().getUser().getName());
+
+      System.out.println("detailS about savedRiderrequest "+savedRideRequest.getRideRequestStatus());
 
         RideRequestDto rideRequestDto1=modelMapper.map(savedRideRequest,RideRequestDto.class);
 //        System.out.println("details after converison  : "+rideRequestDto1.getRider().getUserDto().getName());
-
+        System.out.println("detailS about savedRiderrequest after map "+savedRideRequest.getRideRequestStatus());
         return rideRequestDto1;
     }
 
@@ -91,8 +91,9 @@ public class RiderServiceImpl implements RiderService {
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
         driverService.updateDriverAvailability(ride.getDriver(), true);
 
-        return modelMapper.map(savedRide, RideDto.class);
-
+//        return modelMapper.map(savedRide, RideDto.class);
+        RideDto rideDto1=mappingImpl(ride);
+        return rideDto1;
 
     }
 

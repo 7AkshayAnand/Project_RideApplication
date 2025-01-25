@@ -41,6 +41,7 @@ public class DriverServiceImpl implements DriverService {
     public RideDto acceptRide(Long rideRequestId) {
 
         RideRequest rideRequest = rideRequestService.findRideRequestById(rideRequestId);
+        System.out.println("accept ride  "+rideRequest.getRideRequestStatus());
 
         if(!rideRequest.getRideRequestStatus().equals(RideRequestStatus.PENDING)) {
             throw new RuntimeException("RideRequest cannot be accepted, status is "+ rideRequest.getRideRequestStatus());
@@ -92,8 +93,8 @@ public class DriverServiceImpl implements DriverService {
 
         rideService.updateRideStatus(ride, RideStatus.CANCELLED);
         updateDriverAvailability(driver, true);
-
-        return modelMapper.map(ride, RideDto.class);
+        RideDto rideDto1=mappingImpl(ride);
+        return rideDto1;
     }
 
 
@@ -119,14 +120,34 @@ public class DriverServiceImpl implements DriverService {
 //
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
-        paymentService.createNewPayment(ride);
-        return modelMapper.map(savedRide, RideDto.class);
+        paymentService.createNewPayment(savedRide);
+        RideDto rideDto1=mappingImpl(ride);
+        return rideDto1;
 
     }
 
     @Override
     public RideDto endRide(Long rideId) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if(!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver cannot end a ride as he has not accepted it earlier");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ONGOING)) {
+            throw new RuntimeException("Ride status is not ONGOING hence cannot be ended, status: "+ride.getRideStatus());
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(driver, true);
+
+        paymentService.processPayment(ride);
+
+//        return modelMapper.map(savedRide, RideDto.class);
+        RideDto rideDto1=mappingImpl(ride);
+        return rideDto1;
     }
 
     @Override
@@ -146,7 +167,7 @@ public class DriverServiceImpl implements DriverService {
     public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
         Driver currentDriver = getCurrentDriver();
         return rideService.getAllRidesOfDriver(currentDriver, pageRequest).map(
-                ride -> modelMapper.map(ride, RideDto.class)
+                ride -> mappingImpl(ride)
 //                here may be model mapper not work so implement by yourself
         );
     }
@@ -161,6 +182,8 @@ public class DriverServiceImpl implements DriverService {
         driver.setAvailable(available);
         return driverRepository.save(driver);
     }
+
+
 
     public RideDto mappingImpl(Ride ride){
 
