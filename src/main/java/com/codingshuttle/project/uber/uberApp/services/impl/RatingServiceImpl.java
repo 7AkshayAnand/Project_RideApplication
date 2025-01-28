@@ -7,7 +7,7 @@ import com.codingshuttle.project.uber.uberApp.entities.Rating;
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
 import com.codingshuttle.project.uber.uberApp.entities.Rider;
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
-import com.codingshuttle.project.uber.uberApp.exceptions.RuntimeConflictException;
+import com.codingshuttle.project.uber.uberApp.exceptions.RuntimeConflictExceptionn;
 import com.codingshuttle.project.uber.uberApp.repositories.DriverRepository;
 import com.codingshuttle.project.uber.uberApp.repositories.RatingRepository;
 import com.codingshuttle.project.uber.uberApp.repositories.RiderRepository;
@@ -32,7 +32,7 @@ public class RatingServiceImpl implements RatingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Rating not found for ride with id: "+ride.getId()));
 
         if(ratingObj.getDriverRating() != null)
-            throw new RuntimeConflictException("Driver has already been rated, cannot rate again");
+            throw new RuntimeConflictExceptionn("Driver has already been rated, cannot rate again");
 
         ratingObj.setDriverRating(rating);
 
@@ -46,6 +46,8 @@ public class RatingServiceImpl implements RatingService {
 
         Driver savedDriver = driverRepository.save(driver);
         return modelMapper.map(savedDriver, DriverDto.class);
+
+//        like in this what i am doing that first i am letting the rider to rate the driver then upon this new rating i am calculating the new rating of the driver by takin the average
     }
 
     @Override
@@ -54,7 +56,7 @@ public class RatingServiceImpl implements RatingService {
         Rating ratingObj = ratingRepository.findByRide(ride)
                 .orElseThrow(() -> new ResourceNotFoundException("Rating not found for ride with id: "+ride.getId()));
         if(ratingObj.getRiderRating() != null)
-            throw new RuntimeConflictException("Rider has already been rated, cannot rate again");
+            throw new RuntimeConflictExceptionn("Rider has already been rated, cannot rate again");
 
         ratingObj.setRiderRating(rating);
 
@@ -68,6 +70,8 @@ public class RatingServiceImpl implements RatingService {
 
         Rider savedRider = riderRepository.save(rider);
         return modelMapper.map(savedRider, RiderDto.class);
+
+//        like in this what i am doing that first i am letting the rider to rate the rider then upon this new rating i am calculating the new rating of the rider by takin the average
     }
 
     @Override

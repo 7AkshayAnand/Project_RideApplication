@@ -8,6 +8,7 @@ import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundExcepti
 import com.codingshuttle.project.uber.uberApp.repositories.RideRequestRepository;
 import com.codingshuttle.project.uber.uberApp.repositories.RiderRepository;
 import com.codingshuttle.project.uber.uberApp.services.DriverService;
+import com.codingshuttle.project.uber.uberApp.services.RatingService;
 import com.codingshuttle.project.uber.uberApp.services.RideService;
 import com.codingshuttle.project.uber.uberApp.services.RiderService;
 import com.codingshuttle.project.uber.uberApp.configs.*;
@@ -39,6 +40,7 @@ public class RiderServiceImpl implements RiderService {
     private final RiderRepository riderRepository;
 
      private  final RideService rideService;
+     private final RatingService ratingService;
 
      private DriverService driverService;
 
@@ -110,8 +112,7 @@ public class RiderServiceImpl implements RiderService {
             throw new RuntimeException("Ride status is not Ended hence cannot start rating, status: "+ride.getRideStatus());
         }
 
-       // return ratingService.rateDriver(ride, rating);
-        return null;
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override

@@ -12,10 +12,7 @@ import com.codingshuttle.project.uber.uberApp.entities.enums.RideRequestStatus;
 import com.codingshuttle.project.uber.uberApp.entities.enums.RideStatus;
 import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundException;
 import com.codingshuttle.project.uber.uberApp.repositories.DriverRepository;
-import com.codingshuttle.project.uber.uberApp.services.DriverService;
-import com.codingshuttle.project.uber.uberApp.services.PaymentService;
-import com.codingshuttle.project.uber.uberApp.services.RideRequestService;
-import com.codingshuttle.project.uber.uberApp.services.RideService;
+import com.codingshuttle.project.uber.uberApp.services.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -35,6 +32,7 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -121,6 +119,7 @@ public class DriverServiceImpl implements DriverService {
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
         paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
         RideDto rideDto1=mappingImpl(ride);
         return rideDto1;
 
