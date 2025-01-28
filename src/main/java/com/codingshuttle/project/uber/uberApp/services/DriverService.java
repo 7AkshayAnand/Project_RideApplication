@@ -24,6 +24,8 @@ public interface DriverService {
   Page<RideDto> getAllMyRides(PageRequest pageRequest);
   Driver getCurrentDriver();
   Driver updateDriverAvailability(Driver driver, boolean available);
+
+  Driver createNewDriver(Driver driver);
 }
 
 //in above methods somewhere we require the driver id so we are not providing here as it will automatically given by spring security context holedr

@@ -151,8 +151,24 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    public Driver createNewDriver(Driver driver) {
+        return driverRepository.save(driver);
+    }
+
+    @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if(!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Driver is not the owner of this Ride");
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("Ride status is not Ended hence cannot start rating, status: "+ride.getRideStatus());
+        }
+
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override

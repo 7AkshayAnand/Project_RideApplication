@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(name = "idx_wallet_transaction_wallet", columnList = "wallet_id"),
+        @Index(name = "idx_wallet_transaction_ride", columnList = "ride_id")
+})
 public class WalletTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +31,7 @@ public class WalletTransaction {
 
     private TransactionMethod transactionMethod;
 
-    @OneToOne
+    @ManyToOne
     private Ride ride;
 //    if transaction related to ride then ride id will get stored otherwise null get stored
 

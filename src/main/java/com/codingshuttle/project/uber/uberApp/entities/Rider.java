@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Rider {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
