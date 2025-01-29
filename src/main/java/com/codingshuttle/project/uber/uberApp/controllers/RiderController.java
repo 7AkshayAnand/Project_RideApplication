@@ -31,10 +31,10 @@ public class RiderController {
         return ResponseEntity.ok(riderService.cancelRide(rideId));
     }
 //
-//    @PostMapping("/rateDriver")
-//    public ResponseEntity<DriverDto> rateDriver(@RequestBody RatingDto ratingDto) {
-//        return ResponseEntity.ok(riderService.rateDriver(ratingDto.getRideId(), ratingDto.getRating()));
-//    }
+    @PostMapping("/rateDriver")
+    public ResponseEntity<DriverDto> rateDriver(@RequestBody RatingDto ratingDto) {
+        return ResponseEntity.ok(riderService.rateDriver(ratingDto.getRideId(), ratingDto.getRating()));
+    }
 
     @GetMapping("/getMyProfile")
     public ResponseEntity<RiderDto> getMyProfile() {
@@ -49,8 +49,8 @@ public class RiderController {
         return ResponseEntity.ok(riderService.getAllMyRides(pageRequest));
     }
 
-    @PostMapping("/rateDriver/{driverId}/{rating}")
-    public ResponseEntity<DriverDto> rateDriver(@PathVariable Long rideId, @PathVariable Integer rating) {
-        return ResponseEntity.ok(riderService.rateDriver(rideId, rating));
-    }
+//    @PostMapping("/rateDriver/{driverId}/{rating}")
+//    public ResponseEntity<DriverDto> rateDriver(@PathVariable Long rideId, @PathVariable Integer rating) {
+//        return ResponseEntity.ok(riderService.rateDriver(rideId, rating));
+//    }
 }

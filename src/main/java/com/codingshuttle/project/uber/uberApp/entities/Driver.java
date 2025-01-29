@@ -8,6 +8,8 @@ import org.locationtech.jts.geom.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Table(indexes = {
         @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId")
