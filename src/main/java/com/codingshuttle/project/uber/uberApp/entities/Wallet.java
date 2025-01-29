@@ -18,7 +18,7 @@ public class Wallet {
 
 
 
-    @OneToOne(fetch= FetchType.LAZY,optional = false)
+    @OneToOne(fetch= FetchType.LAZY,optional = false,cascade = CascadeType.DETACH)
     private User user;
 //    as every user can have wallet whether he/she is rider or driver or admin
 
