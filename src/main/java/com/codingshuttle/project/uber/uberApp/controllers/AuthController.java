@@ -34,13 +34,14 @@ public class AuthController {
     ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto,
                                            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String tokens[] = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-
+//sending refresh token as cookie
         Cookie cookie = new Cookie("token", tokens[1]);
 //        as token[0]=accessToken and token[1]=refreshToken
         cookie.setHttpOnly(true);
+//        sethttponly to true means the javascript cannot access it
 
         httpServletResponse.addCookie(cookie);
-
+//sending access token in form of LoginResponseDto
         return ResponseEntity.ok(new LoginResponseDto(tokens[0]));
     }
 

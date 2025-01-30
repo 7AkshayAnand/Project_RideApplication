@@ -18,8 +18,10 @@ import com.codingshuttle.project.uber.uberApp.strategies.RideStrategyManager;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +44,17 @@ public class RiderServiceImpl implements RiderService {
      private  final RideService rideService;
      private final RatingService ratingService;
 
-     private DriverService driverService;
-
-
+     private final DriverService driverService;
+   @Autowired
+    public RiderServiceImpl(DriverService driverService, ModelMapper modelMapper, RatingService ratingService, RideRequestRepository rideRequestRepository, RiderRepository riderRepository, RideService rideService, RideStrategyManager rideStrategyManager) {
+        this.driverService = driverService;
+        this.modelMapper = modelMapper;
+        this.ratingService = ratingService;
+        this.rideRequestRepository = rideRequestRepository;
+        this.riderRepository = riderRepository;
+        this.rideService = rideService;
+        this.rideStrategyManager = rideStrategyManager;
+    }
 
     @Override
     @Transactional
@@ -57,14 +67,23 @@ public class RiderServiceImpl implements RiderService {
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         rideRequest.setRider(rider);
 
+        System.out.println("getting some details in serviceride  : "+rideRequest.getRider()+" and "+rideRequest.getDropOffLocation()+" now pick "+rideRequest.getPickupLocation() );
+
         Double fare=rideStrategyManager.rideFareCalculationStrategy().calculateFare(rideRequest);
 
         rideRequest.setFare(fare);
+        RideRequest savedRideRequest=null;
 
-        RideRequest savedRideRequest= rideRequestRepository.save(rideRequest);
+        try{
+            savedRideRequest= rideRequestRepository.save(rideRequest);
+        }catch(Exception e){
+            System.out.println("while saving this occour  : "+e.toString());
+        }
+System.out.println("i am fine baba : "+savedRideRequest.getPickupLocation());
 
 
         List<Driver> drivers =  rideStrategyManager. driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
+
 
 
 
@@ -142,7 +161,12 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public  Rider getCurrentRider(){
         //TODO implement spring secutiry
-        return riderRepository.findById(1L).orElseThrow(()-> new ResourceNotFoundException("rider not found with id: "+1));
+//        return riderRepository.findById(1L).orElseThrow(()-> new ResourceNotFoundException("rider not found with id: "+1));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return riderRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(
+                "Rider not associated with user with id: "+user.getId()));
     }
 
     public RideDto mappingImpl(Ride ride){
