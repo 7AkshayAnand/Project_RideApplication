@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
-
+@Secured("ROLE_RIDER")
+//below api are only called by rider only and in our system everyone is rider
 public class RiderController {
 
     private final RiderService riderService;
