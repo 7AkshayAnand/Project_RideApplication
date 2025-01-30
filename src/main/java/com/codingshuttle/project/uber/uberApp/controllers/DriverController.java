@@ -4,6 +4,7 @@ import com.codingshuttle.project.uber.uberApp.dto.*;
 
 import com.codingshuttle.project.uber.uberApp.services.DriverService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,11 +13,15 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @RequestMapping("/drivers")
 @Secured("ROLE_DRIVER")
 //below api can be called by drivers only
 public class DriverController {
+    @Autowired
+    public DriverController(DriverService driverService) {
+        this.driverService = driverService;
+    }
 
     private final DriverService driverService;
 

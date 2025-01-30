@@ -4,6 +4,7 @@ import com.codingshuttle.project.uber.uberApp.dto.*;
 import com.codingshuttle.project.uber.uberApp.services.RiderService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,12 +17,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/rider")
 
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Secured("ROLE_RIDER")
 //below api are only called by rider only and in our system everyone is rider
 public class RiderController {
 
     private final RiderService riderService;
+     @Autowired
+    public RiderController(RiderService riderService) {
+        this.riderService = riderService;
+    }
 
     @PostMapping("/requestRide")
     public ResponseEntity<RideRequestDto> requestRide(@RequestBody RideRequestDto rideRequestDto){

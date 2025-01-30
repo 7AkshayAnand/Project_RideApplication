@@ -94,6 +94,22 @@ public class AuthServiceImpl implements AuthService {
         user.getRoles().add(DRIVER);
         userRepository.save(user);
         Driver savedDriver = driverService.createNewDriver(createDriver);
-        return modelMapper.map(savedDriver, DriverDto.class);
+//        return modelMapper.map(savedDriver, DriverDto.class);
+
+        System.out.println("v id is "+vehicleId);
+        return myMap(savedDriver,vehicleId);
+    }
+
+    public DriverDto myMap(Driver driver,String vid){
+
+        DriverDto driverDto1=modelMapper.map(driver, DriverDto.class);
+        User user1=driver.getUser();
+        UserDto userDto1=modelMapper.map(user1, UserDto.class);
+        driverDto1.setUserDto(userDto1);
+        driverDto1.setVehicleId(vid);
+        System.out.println(" v id is "+driverDto1.getVehicleId());
+        System.out.println("detals are "+driverDto1.getUserDto().getName()+" and "+driverDto1.getUserDto().getEmail() );
+        return driverDto1;
+
     }
 }
