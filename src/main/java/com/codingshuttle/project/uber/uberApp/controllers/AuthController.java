@@ -47,6 +47,8 @@ public class AuthController {
 //sending refresh token as cookie
         Cookie cookie = new Cookie("token", tokens[1]);
 //        as token[0]=accessToken and token[1]=refreshToken
+
+//        NOTE ***** for logout just set the cookies to null
         cookie.setHttpOnly(true);
 //        sethttponly to true means the javascript cannot access it
 
