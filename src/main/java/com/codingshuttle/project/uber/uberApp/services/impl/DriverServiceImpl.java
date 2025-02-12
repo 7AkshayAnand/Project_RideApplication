@@ -1,9 +1,6 @@
 package com.codingshuttle.project.uber.uberApp.services.impl;
 
-import com.codingshuttle.project.uber.uberApp.dto.DriverDto;
-import com.codingshuttle.project.uber.uberApp.dto.RideDto;
-import com.codingshuttle.project.uber.uberApp.dto.RiderDto;
-import com.codingshuttle.project.uber.uberApp.dto.UserDto;
+import com.codingshuttle.project.uber.uberApp.dto.*;
 import com.codingshuttle.project.uber.uberApp.entities.Driver;
 import com.codingshuttle.project.uber.uberApp.entities.Ride;
 import com.codingshuttle.project.uber.uberApp.entities.RideRequest;
@@ -14,6 +11,8 @@ import com.codingshuttle.project.uber.uberApp.exceptions.ResourceNotFoundExcepti
 import com.codingshuttle.project.uber.uberApp.repositories.DriverRepository;
 import com.codingshuttle.project.uber.uberApp.services.*;
 import lombok.AllArgsConstructor;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,7 +44,8 @@ public class DriverServiceImpl implements DriverService {
         if(!rideRequest.getRideRequestStatus().equals(RideRequestStatus.PENDING)) {
             throw new RuntimeException("RideRequest cannot be accepted, status is "+ rideRequest.getRideRequestStatus());
         }
-
+//now we have already send the notification to the all the list of driver in riderserviceimpl in request ride method
+//        whoever accepts this ride calls this method
         Driver currentDriver = getCurrentDriver();
 
 
@@ -221,5 +221,26 @@ public class DriverServiceImpl implements DriverService {
 
         rideDto1.setDriverDto(driverDto);
         return rideDto1;
+    }
+
+    private final GeometryFactory geometryFactory = new GeometryFactory();
+    @Transactional
+    public DriverLocDto updateLocation(Long driverId, double latitude, double longitude) {
+        Point point = geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude));
+
+        // Find the driver and update their location
+        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not found"));
+        driver.setCurrentLocation(point);
+
+        Point p1=driver.getCurrentLocation();
+       PointDto pt1= modelMapper.map(p1, PointDto.class);
+
+        Driver driver1=driverRepository.save(driver);
+       System.out.println("updated loc of driver is "+driver1.getCurrentLocation());
+       DriverLocDto driverLocDto=new DriverLocDto();
+       driverLocDto.setCurrentLocation(pt1);
+
+        return driverLocDto;
+
     }
 }

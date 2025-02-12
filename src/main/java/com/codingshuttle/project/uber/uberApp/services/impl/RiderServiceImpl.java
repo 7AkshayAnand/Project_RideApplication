@@ -84,7 +84,7 @@ System.out.println("i am fine baba : "+savedRideRequest.getPickupLocation());
 
         List<Driver> drivers =  rideStrategyManager. driverMatchingStrategy(rider.getRating()).findMatchingDriver(rideRequest);
 
-
+//   here we send the notification  through mail to all the list of present drivers
 
 
 

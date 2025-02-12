@@ -26,6 +26,7 @@ public interface DriverService {
   Driver updateDriverAvailability(Driver driver, boolean available);
 
   Driver createNewDriver(Driver driver);
+  public  DriverLocDto updateLocation(Long driverId, double latitude, double longitude);
 }
 
 //in above methods somewhere we require the driver id so we are not providing here as it will automatically given by spring security context holedr

@@ -1,5 +1,6 @@
 package com.codingshuttle.project.uber.uberApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -33,6 +34,7 @@ public class Driver {
     private String vehicleId;
 
     @Column(columnDefinition = "Geometry(Point,4326)")
+
 //    4326 refers that we will be dealing with earth geometry
    private Point currentLocation;
 
